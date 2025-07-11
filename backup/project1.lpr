@@ -1,7 +1,7 @@
 program project1;
 
 uses
-  gl, glu, glut;
+  SysUtils, gl, glu, glut;
 
 const
   APP_WIDTH = 1024;
@@ -102,6 +102,36 @@ begin
   glEnd;
 end;
 
+procedure DrawText(x, y: GLfloat; const text: string);
+var
+  i: Integer;
+begin
+  glRasterPos2f(x, y);
+  for i := 1 to Length(text) do
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, Ord(text[i]));
+end;
+
+procedure DrawScore;
+var
+  i: Integer;
+  score: String;
+begin
+  glDisable(GL_DEPTH_TEST);
+
+  score := '';
+  for i := 1 to 8 - Length(IntToStr((snakeSize - 3) * 100)) do
+  begin
+    score += '0';
+  end;
+
+  score += IntToStr((snakeSize - 3) * 100);
+
+  glColor3f(1.0, 1.0, 1.0);
+  DrawText(32 * 14, 617, score);
+
+  glEnable(GL_DEPTH_TEST);
+end;
+
 procedure DrawWalls;
 var
   i: Integer;
@@ -172,7 +202,7 @@ begin
   for i := 0 to Length(walls) - 1 do
   begin
     glPushMatrix;
-      glColor3f(0.0, 0.0, 0.0);
+      glColor3f(0.05, 0.05, 0.05);
       glTranslatef(walls[i].PosX, walls[i].PosY, 0.3);
       DrawQuad(GL_QUADS);
     glPopMatrix;
@@ -209,6 +239,7 @@ begin
     food.Visible := false;
     Inc(snakeSize);
     glutTimerFunc(100, @CreateFood, 0);
+    DrawScore;
   end;
 
   for i := snakeSize - 1 downto 1 do
@@ -229,11 +260,8 @@ end;
 
 procedure InitDisplay;
 begin
-  glClearColor(0.3, 0.4, 0.9, 1.0);
-  glClearColor(0.3, 0.4, 0.9, 1.0);
+  glClearColor(0.25, 0.25, 0.25, 1.0);
   glEnable(GL_DEPTH_TEST);
-
-  LoadTextureFromPNG('assets/wall.png', TextureID);
 
   StartGame;
 end;
@@ -249,7 +277,7 @@ begin
 
   if food.Visible then begin
     glPushMatrix;
-      glColor3f(1.0, 0.0, 0.0);
+      glColor3f(1.0, 0.2, 0.2);
       glTranslatef(food.PosX, food.PosY, 0.1);
       DrawQuad(GL_QUADS);
     glPopMatrix;
@@ -257,11 +285,13 @@ begin
 
   for i := 0 to snakeSize - 1 do begin
     glPushMatrix;
-      glColor3f(0.0, 1.0, 0.0);
+      glColor3f(0.2, 1.0, 0.2);
       glTranslatef(snake[i].PosX, snake[i].PosY, 0.2);
       DrawQuad(GL_QUADS);
     glPopMatrix;
   end;
+
+  DrawScore;
 
   glutSwapBuffers;
   glutPostRedisplay;
