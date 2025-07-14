@@ -77,7 +77,9 @@ begin
       else
         flag := true;
 
-    for i := 0 to Length(walls) - 1 do
+    if flag then
+    begin
+      for i := 0 to Length(walls) - 1 do
       if (walls[i].PosX = x * TILE_SIZE) and (walls[i].PosY = y * TILE_SIZE) then
       begin
         flag := false;
@@ -85,6 +87,7 @@ begin
       end
       else
         flag := true;
+    end;
   until flag;
 
   food.PosX := x * TILE_SIZE;

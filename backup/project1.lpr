@@ -77,7 +77,9 @@ begin
       else
         flag := true;
 
-    for i := 0 to Length(walls) - 1 do
+    if not flag then
+    begin
+      for i := 0 to Length(walls) - 1 do
       if (walls[i].PosX = x * TILE_SIZE) and (walls[i].PosY = y * TILE_SIZE) then
       begin
         flag := false;
@@ -85,6 +87,7 @@ begin
       end
       else
         flag := true;
+    end;
   until flag;
 
   food.PosX := x * TILE_SIZE;
@@ -127,7 +130,7 @@ begin
   score += IntToStr((snakeSize - 3) * 100);
 
   glColor3f(1.0, 1.0, 1.0);
-  DrawText(32 * 14, 617, score);
+  DrawText(32 * 15, 617, score);
 
   glEnable(GL_DEPTH_TEST);
 end;
